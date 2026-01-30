@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { db, collection, addDoc, serverTimestamp } from '../firebase.ts';
 
@@ -23,7 +22,11 @@ const COUNTRIES: Record<TabType, string[]> = {
   'Study In India': ["India"]
 };
 
-const ContactForm: React.FC = () => {
+interface ContactFormProps {
+  theme?: 'light' | 'dark'; // 'dark' assumes the form is on a dark background
+}
+
+const ContactForm: React.FC<ContactFormProps> = ({ theme = 'light' }) => {
   const [activeTab, setActiveTab] = useState<TabType>('Study Abroad');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -74,6 +77,12 @@ const ContactForm: React.FC = () => {
     }
   };
 
+  // Styles based on theme
+  const textColor = theme === 'dark' ? 'text-white' : 'text-brand-blue dark:text-white';
+  const subTextColor = theme === 'dark' ? 'text-white/70' : 'text-gray-500 font-medium';
+  // If theme is dark (on blue bg), we want white inputs. If light, we stick to standard.
+  const inputBg = theme === 'dark' ? 'bg-white text-gray-900 border-transparent focus:ring-brand-gold' : 'bg-white dark:bg-slate-900 dark:text-white border-gray-200 dark:border-slate-700 focus:ring-brand-blue';
+  
   return (
     <div className="relative">
       {submitted ? (
@@ -81,17 +90,17 @@ const ContactForm: React.FC = () => {
           <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
             <i className="fa-solid fa-check text-3xl"></i>
           </div>
-          <h3 className="text-2xl font-bold text-brand-blue dark:text-white mb-2">Application Received!</h3>
-          <p className="text-gray-500 text-base font-medium">An expert advisor will contact you shortly.</p>
+          <h3 className={`text-2xl font-bold mb-2 ${textColor}`}>Application Received!</h3>
+          <p className={`${subTextColor} text-base`}>An expert advisor will contact you shortly.</p>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <h3 className="text-3xl font-black text-brand-blue dark:text-white mb-2">Book Free Consultation</h3>
-            <p className="text-gray-500 font-medium text-base mb-6">Select your preference and get expert guidance.</p>
+            <h3 className={`text-3xl font-black mb-2 ${textColor}`}>Book Free Consultation</h3>
+            <p className={`${subTextColor} text-base mb-6`}>Select your preference and get expert guidance.</p>
             
             {/* Tabs */}
-            <div className="flex bg-gray-100 dark:bg-slate-700 p-1 rounded-xl w-fit mb-6 overflow-x-auto max-w-full">
+            <div className={`${theme === 'dark' ? 'bg-white/10' : 'bg-gray-100 dark:bg-slate-700'} p-1 rounded-xl w-fit mb-6 overflow-x-auto max-w-full`}>
                {TABS.map(tab => (
                  <button
                    key={tab}
@@ -99,8 +108,8 @@ const ContactForm: React.FC = () => {
                    onClick={() => setActiveTab(tab)}
                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
                      activeTab === tab 
-                     ? 'bg-white dark:bg-slate-600 text-brand-blue dark:text-white shadow-sm' 
-                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
+                     ? 'bg-white text-brand-blue shadow-sm' 
+                     : `${theme === 'dark' ? 'text-white/70 hover:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'}`
                    }`}
                  >
                    {tab}
@@ -117,7 +126,7 @@ const ContactForm: React.FC = () => {
                 disabled={loading}
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
-                className="w-full px-6 py-4 rounded-xl border border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium text-sm" 
+                className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm ${inputBg}`} 
                 placeholder="Full Name" 
               />
             </div>
@@ -128,7 +137,7 @@ const ContactForm: React.FC = () => {
               disabled={loading}
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
-              className="w-full px-6 py-4 rounded-xl border border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium text-sm" 
+              className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm ${inputBg}`} 
               placeholder="Email Address" 
             />
             
@@ -138,7 +147,7 @@ const ContactForm: React.FC = () => {
               disabled={loading}
               value={formData.phone}
               onChange={(e) => setFormData({...formData, phone: e.target.value})}
-              className="w-full px-6 py-4 rounded-xl border border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium text-sm" 
+              className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm ${inputBg}`} 
               placeholder="Phone Number" 
             />
 
@@ -148,10 +157,10 @@ const ContactForm: React.FC = () => {
                   value={formData.city}
                   onChange={e => setFormData({...formData, city: e.target.value})}
                   required
-                  className="w-full px-6 py-4 rounded-xl border border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium text-sm appearance-none"
+                  className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm appearance-none ${inputBg}`}
               >
-                  <option value="" disabled>Select City</option>
-                  {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
+                  <option value="" disabled className="text-gray-500 bg-white">Select City</option>
+                  {CITIES.map(c => <option key={c} value={c} className="text-gray-900 bg-white">{c}</option>)}
               </select>
             )}
 
@@ -159,10 +168,10 @@ const ContactForm: React.FC = () => {
                 value={formData.course}
                 onChange={e => setFormData({...formData, course: e.target.value})}
                 required
-                className="w-full px-6 py-4 rounded-xl border border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium text-sm appearance-none"
+                className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm appearance-none ${inputBg}`}
             >
-                <option value="" disabled>Select Course</option>
-                {COURSES[activeTab].map(c => <option key={c} value={c}>{c}</option>)}
+                <option value="" disabled className="text-gray-500 bg-white">Select Course</option>
+                {COURSES[activeTab].map(c => <option key={c} value={c} className="text-gray-900 bg-white">{c}</option>)}
             </select>
 
             <div className="md:col-span-2">
@@ -170,9 +179,9 @@ const ContactForm: React.FC = () => {
                 value={formData.targetCountry}
                 disabled={loading || activeTab === 'Study In India'}
                 onChange={(e) => setFormData({...formData, targetCountry: e.target.value})}
-                className="w-full px-6 py-4 rounded-xl border border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:ring-2 focus:ring-brand-blue outline-none transition-all appearance-none font-medium text-sm disabled:opacity-70 disabled:bg-gray-100 dark:disabled:bg-slate-800"
+                className={`w-full px-6 py-4 rounded-xl border outline-none transition-all appearance-none font-medium text-sm disabled:opacity-70 ${inputBg}`}
               >
-                {COUNTRIES[activeTab].map(c => <option key={c} value={c}>{c}</option>)}
+                {COUNTRIES[activeTab].map(c => <option key={c} value={c} className="text-gray-900 bg-white">{c}</option>)}
               </select>
             </div>
           </div>
