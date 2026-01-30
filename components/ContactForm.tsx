@@ -157,7 +157,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ theme = 'light' }) => {
                   value={formData.city}
                   onChange={e => setFormData({...formData, city: e.target.value})}
                   required
-                  className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm appearance-none ${inputBg}`}
+                  className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm cursor-pointer ${inputBg}`}
               >
                   <option value="" disabled className="text-gray-500 bg-white">Select City</option>
                   {CITIES.map(c => <option key={c} value={c} className="text-gray-900 bg-white">{c}</option>)}
@@ -168,7 +168,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ theme = 'light' }) => {
                 value={formData.course}
                 onChange={e => setFormData({...formData, course: e.target.value})}
                 required
-                className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm appearance-none ${inputBg}`}
+                className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm cursor-pointer ${inputBg}`}
             >
                 <option value="" disabled className="text-gray-500 bg-white">Select Course</option>
                 {COURSES[activeTab].map(c => <option key={c} value={c} className="text-gray-900 bg-white">{c}</option>)}
@@ -179,7 +179,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ theme = 'light' }) => {
                 value={formData.targetCountry}
                 disabled={loading || activeTab === 'Study In India'}
                 onChange={(e) => setFormData({...formData, targetCountry: e.target.value})}
-                className={`w-full px-6 py-4 rounded-xl border outline-none transition-all appearance-none font-medium text-sm disabled:opacity-70 ${inputBg}`}
+                className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm disabled:opacity-70 cursor-pointer ${inputBg}`}
               >
                 {COUNTRIES[activeTab].map(c => <option key={c} value={c} className="text-gray-900 bg-white">{c}</option>)}
               </select>
