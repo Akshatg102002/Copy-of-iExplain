@@ -1,4 +1,3 @@
-
 import { Destination, Office, Blog, Testimonial, College, CollegeDetailData, ProgramDetailData, MBBSDetailData, StudyIndiaDetailData, Service } from './types';
 
 export const LOGO_URL = "https://www.iexplaineducation.com/wp-content/uploads/2023/04/Logo-2-scaled-e1684926432756-768x307.jpg";
@@ -249,4 +248,239 @@ export const INDIA_COURSES_DETAILED: Record<string, StudyIndiaDetailData> = {
         "In India, the weather is tropical monsoon climate and tropical wet and dry climate.",
         "The population in India is approx. 133.92 crores.",
         "India has the largest postal network across the globe, having more than 1 55,015 post offices.",
-        "India is known for organizing the largest
+        "India is known for organizing the largest gathering of people in the world, the Kumbh Mela.",
+        "Taj Mahal is one of the seven wonders of the world.",
+        "India is famous for its spices, cricket, food, and culture."
+      ]
+    }
+  }
+};
+
+export const STUDENT_SERVICES_DATA: Service[] = [
+  {
+    id: "career-counseling",
+    title: "Career Counseling",
+    desc: "Expert guidance to help you choose the right career path and university.",
+    icon: "fa-solid fa-comments",
+    fullDesc: "Our expert counselors analyze your profile to suggest the best universities and courses that align with your career goals and budget."
+  },
+  {
+    id: "university-selection",
+    title: "University Selection",
+    desc: "We help you select the best universities based on rankings, budget, and location.",
+    icon: "fa-solid fa-building-columns",
+    fullDesc: "With over 500+ universities in our network, we ensure you get admitted to a top-tier institution."
+  },
+  {
+    id: "visa-assistance",
+    title: "Visa Assistance",
+    desc: "Complete support for visa application, documentation, and interview preparation.",
+    icon: "fa-brands fa-cc-visa",
+    fullDesc: "Our visa success rate is 99%. We guide you through the complex documentation and interview process."
+  },
+  {
+    id: "travel-assistance",
+    title: "Travel Assistance",
+    desc: "Flight bookings, forex, and pre-departure briefings for a smooth journey.",
+    icon: "fa-solid fa-plane-departure",
+    fullDesc: "We assist with economical flight tickets, forex cards, and ensure you have all essentials before flying."
+  }
+];
+
+export const COUNTRY_DETAILS: any = {}; // Placeholder if needed
+
+export const BLOG_POSTS: Blog[] = [
+  {
+    id: "1",
+    title: "Top 5 Countries for MBBS Abroad in 2025",
+    img: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800",
+    date: "Jan 15, 2025",
+    category: "MBBS Abroad",
+    author: "Admin",
+    content: "Russia, Georgia, and Kazakhstan remain top choices...",
+    readTime: "5 min"
+  },
+  {
+    id: "2",
+    title: "How to Crack NEET 2025: Expert Tips",
+    img: "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?auto=format&fit=crop&q=80&w=800",
+    date: "Jan 10, 2025",
+    category: "Entrance Exams",
+    author: "Dr. Sharma",
+    content: "Consistency is key to cracking NEET...",
+    readTime: "4 min"
+  },
+  {
+    id: "3",
+    title: "Study in UK Without IELTS",
+    img: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&q=80&w=800",
+    date: "Jan 05, 2025",
+    category: "Study Abroad",
+    author: "Admin",
+    content: "Many UK universities accept MOI instead of IELTS...",
+    readTime: "6 min"
+  }
+];
+
+export const STUDY_ABROAD_DETAILED: Record<string, ProgramDetailData> = {
+  "usa": {
+    title: "Study in USA",
+    tagline: "Land of Opportunities",
+    heroImage: "https://images.unsplash.com/photo-1508433957232-3107f5fd5995?auto=format&fit=crop&q=80&w=1600",
+    content: "<h3>Why Study in USA?</h3><p>The USA is home to the world's top universities...</p>",
+    faqs: [{ question: "Is SAT mandatory?", answer: "Not for all universities, many are test-optional." }]
+  }
+};
+
+export const MBBS_ABROAD_DETAILED: Record<string, MBBSDetailData> = {
+  "russia": {
+    title: "MBBS in Russia",
+    heroImage: "https://images.unsplash.com/photo-1513326738677-b964603b136d?auto=format&fit=crop&q=80&w=1600",
+    intro: {
+      text: "Russia offers high-quality medical education at affordable costs...",
+      image: "https://images.unsplash.com/photo-1584036561566-b45238f2e26f?auto=format&fit=crop&q=80&w=600"
+    },
+    highlights: [{ title: "Duration", value: "6 Years" }, { title: "Medium", value: "English" }],
+    topUniversities: ["Kazan Federal University", "Bashkir State Medical University"],
+    facts: { intro: "Russia is the largest country in the world...", list: ["High Literacy Rate", "Advanced Healthcare"] },
+    documents: [{ icon: "fa-passport", label: "Passport" }, { icon: "fa-file", label: "Mark sheets" }],
+    advantages: ["Low Tuition Fees", "WHO Recognized"],
+    studentLife: { intro: "Vibrant student life...", list: ["Indian Food Available", "Heated Hostels"] }
+  }
+};
+
+export const EXAMS_DETAILED: any = {
+  "neet-ug": {
+    title: "NEET UG 2025",
+    overview: "National Eligibility cum Entrance Test for medical aspirants.",
+    eligibility: ["10+2 with PCB", "Age 17+"]
+  }
+};
+
+export const MEGA_MENU_DATA = {
+  "STUDY ABROAD": [
+    { name: "USA", link: "#/study-abroad/usa", code: "US" },
+    { name: "UK", link: "#/study-abroad/uk", code: "GB" },
+    { name: "Canada", link: "#/study-abroad/canada", code: "CA" },
+    { name: "Australia", link: "#/study-abroad/australia", code: "AU" },
+    { name: "Germany", link: "#/study-abroad/germany", code: "DE" }
+  ],
+  "MBBS ABROAD": [
+    { name: "Russia", link: "#/mbbs-abroad/russia", code: "RU" },
+    { name: "Georgia", link: "#/mbbs-abroad/georgia", code: "GE" },
+    { name: "Kazakhstan", link: "#/mbbs-abroad/kazakhstan", code: "KZ" },
+    { name: "Philippines", link: "#/mbbs-abroad/philippines", code: "PH" },
+    { name: "Bangladesh", link: "#/mbbs-abroad/bangladesh", code: "BD" }
+  ],
+  "STUDY IN INDIA": [
+    { name: "MBBS", link: "#/study-india/mbbs", icon: "fa-solid fa-user-doctor" },
+    { name: "Engineering", link: "#/study-india/engineering", icon: "fa-solid fa-gears" },
+    { name: "Management", link: "#/study-india/management", icon: "fa-solid fa-briefcase" }
+  ],
+  "ENTRANCE EXAMS": [
+    { name: "NEET UG", link: "#/exams/neet-ug", icon: "fa-solid fa-stethoscope" },
+    { name: "JEE Main", link: "#/exams/jee-main", icon: "fa-solid fa-calculator" },
+    { name: "IELTS", link: "#/exams/ielts", icon: "fa-solid fa-language" }
+  ]
+};
+
+export const DESTINATIONS: Destination[] = [
+  {
+    id: "usa",
+    name: "USA",
+    slug: "usa",
+    image: "https://images.unsplash.com/photo-1508433957232-3107f5fd5995?auto=format&fit=crop&q=80&w=800",
+    description: "Home to Ivy League universities and diverse culture.",
+    popularCourses: ["Engineering", "Business"]
+  },
+  {
+    id: "uk",
+    name: "UK",
+    slug: "uk",
+    image: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&q=80&w=800",
+    description: "World-class education with a rich history.",
+    popularCourses: ["Law", "Medicine"]
+  },
+  {
+    id: "canada",
+    name: "Canada",
+    slug: "canada",
+    image: "https://images.unsplash.com/photo-1517935706615-2717063c2225?auto=format&fit=crop&q=80&w=800",
+    description: "Welcoming environment and post-study work rights.",
+    popularCourses: ["IT", "Nursing"]
+  },
+  {
+    id: "australia",
+    name: "Australia",
+    slug: "australia",
+    image: "https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?auto=format&fit=crop&q=80&w=800",
+    description: "High quality of life and top-ranked universities.",
+    popularCourses: ["Marine Biology", "Accounting"]
+  }
+];
+
+export const STATS = [
+  { label: "Years of Experience", value: "15+" },
+  { label: "Students Counseled", value: "10,000+" },
+  { label: "University Partners", value: "500+" },
+  { label: "Visa Success Rate", value: "99%" }
+];
+
+export const TESTIMONIALS: Testimonial[] = [
+  {
+    id: "1",
+    name: "Aditi Rao",
+    univ: "Kazan Federal University",
+    text: "iExplain made my dream of studying MBBS in Russia a reality. Their team guided me at every step.",
+    avatar: "https://ui-avatars.com/api/?name=Aditi+Rao&background=random"
+  },
+  {
+    id: "2",
+    name: "Rohan Mehta",
+    univ: "University of Leeds",
+    text: "Professional and transparent. They helped me with my UK visa when I was losing hope.",
+    avatar: "https://ui-avatars.com/api/?name=Rohan+Mehta&background=random"
+  },
+  {
+    id: "3",
+    name: "Sneha Gupta",
+    univ: "Tbilisi State Medical University",
+    text: "Best consultants for Georgia. They took care of everything from admission to accommodation.",
+    avatar: "https://ui-avatars.com/api/?name=Sneha+Gupta&background=random"
+  }
+];
+
+export const INDIA_COURSES = [
+  { id: "mbbs", title: "MBBS", desc: "Top Govt & Private Colleges", icon: "fa-solid fa-user-doctor" },
+  { id: "engineering", title: "Engineering", desc: "B.Tech in CS, IT, ECE", icon: "fa-solid fa-microchip" },
+  { id: "management", title: "Management", desc: "MBA, BBA, PGDM", icon: "fa-solid fa-chart-pie" },
+  { id: "law", title: "Law", desc: "LLB, BA LLB", icon: "fa-solid fa-scale-balanced" }
+];
+
+export const ROADMAP_STEPS = [
+  { step: "01", title: "Counseling", desc: "Free profile evaluation", icon: "fa-solid fa-comments" },
+  { step: "02", title: "Selection", desc: "University shortlisting", icon: "fa-solid fa-building-columns" },
+  { step: "03", title: "Admission", desc: "Application & Offer Letter", icon: "fa-solid fa-file-circle-check" },
+  { step: "04", title: "Visa", desc: "Visa filing & Interview", icon: "fa-brands fa-cc-visa" },
+  { step: "05", title: "Departure", desc: "Flight & Forex", icon: "fa-solid fa-plane-departure" }
+];
+
+export const POPULAR_COLLEGES: College[] = [
+  { name: "Kazan Federal University", country: "Russia", category: "MBBS Abroad", image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&q=80&w=600" },
+  { name: "Tbilisi State Medical University", country: "Georgia", category: "MBBS Abroad", image: "https://images.unsplash.com/photo-1544531586-fde5298cdd40?auto=format&fit=crop&q=80&w=600" },
+  { name: "Harvard University", country: "USA", category: "Study Abroad", image: "https://images.unsplash.com/photo-1559135197-8a45ea74d367?auto=format&fit=crop&q=80&w=600" },
+  { name: "University of Oxford", country: "UK", category: "Study Abroad", image: "https://images.unsplash.com/photo-1592280771800-bcf9de2312b4?auto=format&fit=crop&q=80&w=600" }
+];
+
+export const COUNTRY_ICONS = [
+  { name: "Russia", icon: "fa-solid fa-flag" },
+  { name: "Georgia", icon: "fa-solid fa-earth-europe" },
+  { name: "USA", icon: "fa-solid fa-flag-usa" },
+  { name: "UK", icon: "fa-solid fa-sterling-sign" }
+];
+
+export const KNOW_YOUR_DESTINATIONS = [
+  { name: "Russia", image: "https://images.unsplash.com/photo-1513326738677-b964603b136d?auto=format&fit=crop&q=80&w=600" },
+  { name: "Georgia", image: "https://images.unsplash.com/photo-1565008447742-97f6f38c985c?auto=format&fit=crop&q=80&w=600" },
+  { name: "Kazakhstan", image: "https://images.unsplash.com/photo-1558588942-930faae5a389?auto=format&fit=crop&q=80&w=600" }
+];

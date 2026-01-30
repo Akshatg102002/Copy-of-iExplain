@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar.tsx';
 import Hero from './components/Hero.tsx';
@@ -21,6 +20,7 @@ import ContactModal from './components/ContactModal.tsx';
 import VideoStories from './components/VideoStories.tsx';
 import CollegeDetailPage from './components/CollegeDetailPage.tsx';
 import ProgramDetailPage from './components/ProgramDetailPage.tsx';
+import StudyIndiaDetailPage from './components/StudyIndiaDetailPage.tsx';
 import MBBSDetailPage from './components/MBBSDetailPage.tsx';
 import * as Flags from 'country-flag-icons/react/3x2';
 import { 
@@ -451,7 +451,7 @@ const App: React.FC = () => {
       case 'blog-list': return <BlogListPage />;
       case 'blog-detail' as any: return <BlogDetailPage slug={route.subPath || ''} />;
       case 'contact': return <ContactPage />;
-      case 'study-india': return <ProgramDetailPage data={INDIA_COURSES_DETAILED[route.subPath || 'mbbs']} type="course" />;
+      case 'study-india': return <StudyIndiaDetailPage data={INDIA_COURSES_DETAILED[route.subPath || 'mbbs']} />;
       case 'study-abroad': return <ProgramDetailPage data={STUDY_ABROAD_DETAILED[route.subPath || 'usa']} type="country" />;
       case 'mbbs-abroad': return <MBBSDetailPage data={MBBS_ABROAD_DETAILED[route.subPath || 'russia']} />;
       case 'exams': return <ExamPage data={EXAMS_DETAILED[route.subPath || 'neet-ug']} />;
