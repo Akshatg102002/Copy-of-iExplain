@@ -24,6 +24,7 @@ import ProgramDetailPage from './components/ProgramDetailPage.tsx';
 import StudyIndiaDetailPage from './components/StudyIndiaDetailPage.tsx';
 import MBBSDetailPage from './components/MBBSDetailPage.tsx';
 import EntranceExamDetailPage from './components/EntranceExamDetailPage.tsx';
+import BlogDetailPage from './components/BlogDetailPage.tsx'; // New Import
 import * as Flags from 'country-flag-icons/react/3x2';
 import { 
   STUDENT_SERVICES_DATA,
@@ -316,7 +317,6 @@ const OfficeDetailPage = ({ slug }: { slug: string }) => {
   );
 };
 
-// Exam page using new detailed component
 const ExamPage = ({ data }: { data: any }) => {
    if (!data) return <div className="py-20 text-center font-bold text-gray-500">Exam information not available.</div>;
    return <EntranceExamDetailPage data={data} />;
@@ -324,7 +324,8 @@ const ExamPage = ({ data }: { data: any }) => {
 
 const AboutPage = () => <div className="py-20 text-center"><h1 className="text-4xl font-bold">About Us</h1><AboutSection compact={false} /></div>;
 const BlogListPage = () => <BlogSection />;
-const BlogDetailPage = ({ slug }: { slug: string }) => <div className="py-20 text-center">Blog Detail: {slug}</div>;
+// Updated BlogDetailPage wrapper
+const BlogDetailWrapper = ({ slug }: { slug: string }) => <BlogDetailPage slug={slug} />;
 const ContactPage = () => <div className="py-20 text-center"><h1 className="text-4xl font-bold">Contact</h1><ContactMapSection /></div>;
 
 // --- DYNAMIC COLLEGE PAGE WRAPPER ---
@@ -435,7 +436,7 @@ const App: React.FC = () => {
       case 'about': return <AboutPage />;
       case 'services': return <ServicesPage />;
       case 'blog-list': return <BlogListPage />;
-      case 'blog-detail' as any: return <BlogDetailPage slug={route.subPath || ''} />;
+      case 'blog-detail' as any: return <BlogDetailWrapper slug={route.subPath || ''} />;
       case 'contact': return <ContactPage />;
       case 'study-india': return <StudyIndiaDetailPage data={INDIA_COURSES_DETAILED[route.subPath || 'mbbs']} />;
       case 'study-abroad': return <ProgramDetailPage data={STUDY_ABROAD_DETAILED[route.subPath || 'usa']} type="country" />;

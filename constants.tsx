@@ -4,6 +4,7 @@ import { Destination, Office, Blog, Testimonial, College, CollegeDetailData, Pro
 export const LOGO_URL = "https://www.iexplaineducation.com/wp-content/uploads/2023/04/Logo-2-scaled-e1684926432756-768x307.jpg";
 export const HERO_IMG_URL = "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=1200";
 
+// ... [Keep existing exports like PRIVACY_POLICY_CONTENT, TERMS_CONTENT, OFFICE_ADDRESSES, FOOTER_COLLEGES, COLLEGE_DETAILS, ABOUT_US_CONTENT, CORE_VALUES_FULL, TEAM_MEMBERS, INDIA_COURSES_DETAILED, STUDENT_SERVICES_DATA, COUNTRY_DETAILS] ...
 export const PRIVACY_POLICY_CONTENT = `
 <h3>1. Introduction</h3>
 <p>Welcome to iExplain Education. We value your privacy and are committed to protecting your personal data. This privacy policy explains how we handle your personal information when you visit our website or use our services.</p>
@@ -298,7 +299,28 @@ export const BLOG_POSTS: Blog[] = [
     date: "Jan 15, 2025",
     category: "MBBS Abroad",
     author: "Admin",
-    content: "Russia, Georgia, and Kazakhstan remain top choices...",
+    content: `
+      <p>Choosing the right destination for your MBBS degree is a crucial decision that shapes your future medical career. In 2025, several countries have emerged as top choices for Indian students due to their affordable fees, high-quality education, and NMC recognition. Here is a curated list of the top 5 countries to consider.</p>
+      
+      <h3>1. Russia</h3>
+      <p>Russia remains the undisputed leader for medical education abroad. With universities like Kazan Federal University and First Moscow State Medical University, it offers world-class infrastructure at a fraction of the cost of Indian private colleges. The medium of instruction is English, and degrees are recognized globally by WHO and NMC.</p>
+      <blockquote>"Russia offers a blend of theoretical knowledge and extensive clinical exposure, making it a prime choice for aspiring doctors."</blockquote>
+
+      <h3>2. Georgia</h3>
+      <p>Georgia has rapidly climbed the ranks to become a favorite. Known for its safety and European standard of living, colleges like Tbilisi State Medical University provide education that is 100% in English. The climate is pleasant, and the community is welcoming to Indian students.</p>
+
+      <h3>3. Kazakhstan</h3>
+      <p>For students looking for the most budget-friendly options without compromising on quality, Kazakhstan is the answer. Universities here have a 5-year course duration, similar to India, which is a significant advantage.</p>
+
+      <h3>4. Philippines</h3>
+      <p>The Philippines follows the American curriculum, which is excellent for students aiming to crack the USMLE. The disease patterns are similar to India, providing relevant clinical experience.</p>
+
+      <h3>5. Bangladesh</h3>
+      <p>With a culture, food, and climate almost identical to India, Bangladesh offers a home away from home. The syllabus is also very similar to the NMC curriculum, leading to high FMGE passing rates.</p>
+
+      <h3>Conclusion</h3>
+      <p>Each of these countries has its unique advantages. Your choice should depend on your budget, career goals, and preference for climate and culture. Contact iExplain Education today for a personalized counseling session to help you decide.</p>
+    `,
     readTime: "5 min"
   },
   {
@@ -308,7 +330,23 @@ export const BLOG_POSTS: Blog[] = [
     date: "Jan 10, 2025",
     category: "Entrance Exams",
     author: "Dr. Sharma",
-    content: "Consistency is key to cracking NEET...",
+    content: `
+      <p>The National Eligibility cum Entrance Test (NEET) is the gateway to medical colleges in India. With competition increasing every year, cracking NEET 2025 requires not just hard work, but smart work. Here are expert tips to guide your preparation.</p>
+
+      <h3>1. Master the NCERT</h3>
+      <p>The NCERT textbooks are your bible. 80-90% of the biology questions and a significant portion of chemistry and physics questions come directly from NCERT. Ensure you read every line, summary, and diagram.</p>
+
+      <h3>2. Strategic Time Management</h3>
+      <p>Create a timetable that allocates time for all three subjects. Don't neglect Physics; it is often the rank decider. Practice solving questions within a time limit to improve your speed and accuracy.</p>
+
+      <h3>3. Mock Tests and Analysis</h3>
+      <p>Taking mock tests is crucial, but analyzing them is even more important. Identify your weak areas after every test and work on them. Understand why you got a question wrong – was it a conceptual error or a silly mistake?</p>
+
+      <h3>4. Health is Wealth</h3>
+      <p>A burnt-out mind cannot retain information. Ensure you get 7 hours of sleep, eat healthy, and take short breaks. A calm mind performs significantly better in exams.</p>
+
+      <p>Remember, consistency is key. Stay focused, stay positive, and you will achieve your dream of becoming a doctor.</p>
+    `,
     readTime: "4 min"
   },
   {
@@ -318,7 +356,27 @@ export const BLOG_POSTS: Blog[] = [
     date: "Jan 05, 2025",
     category: "Study Abroad",
     author: "Admin",
-    content: "Many UK universities accept MOI instead of IELTS...",
+    content: `
+      <p>Dreaming of studying in the United Kingdom but worried about the IELTS exam? Good news! Many prestigious UK universities accept students without IELTS scores based on their Class 12th English marks or other criteria. Let's explore how.</p>
+
+      <h3>Alternative Criteria</h3>
+      <p>Universities often waive the IELTS requirement if you have scored over 70-75% in English in your Class 12th board exams (CBSE/ICSE). Some universities may also conduct their own internal English test or a video interview to assess your proficiency.</p>
+
+      <h3>Top Universities Accepting MOI</h3>
+      <p>Medium of Instruction (MOI) letters from your previous institution stating that your education was in English can also work. Some universities accepting alternatives include:</p>
+      <ul>
+        <li>University of Bristol</li>
+        <li>University of Warwick</li>
+        <li>Sheffield Hallam University</li>
+        <li>University of Greenwich</li>
+        <li>Swansea University</li>
+      </ul>
+
+      <h3>Benefits of Studying in UK</h3>
+      <p>The UK offers 1-year Master's programs, which saves you time and money. Additionally, the 2-year Post-Study Work (PSW) visa allows you to stay and work in the UK after graduation, providing excellent career exposure.</p>
+
+      <p>Don't let language tests be a barrier. Contact iExplain Education to assess your profile and apply to the best UK universities today.</p>
+    `,
     readTime: "6 min"
   }
 ];
@@ -327,6 +385,7 @@ export const SCHOLARSHIP_COUNTRIES = [
   "UK", "Australia", "Canada", "New Zealand", "Poland", "Singapore", "Ireland"
 ];
 
+// ... [Keep the rest of the file unchanged: SCHOLARSHIP_DATA, STUDY_ABROAD_DETAILED, MBBS_ABROAD_DETAILED, EXAMS_DETAILED, MEGA_MENU_DATA, DESTINATIONS, STATS, TESTIMONIALS, INDIA_COURSES, ROADMAP_STEPS, POPULAR_COLLEGES, COUNTRY_ICONS, KNOW_YOUR_DESTINATIONS] ...
 export const SCHOLARSHIP_DATA: Record<string, ProgramDetailData> = {};
 SCHOLARSHIP_COUNTRIES.forEach(c => {
   SCHOLARSHIP_DATA[c.toLowerCase().replace(/ /g, '-')] = {
