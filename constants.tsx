@@ -1,4 +1,5 @@
-import { Destination, Office, Blog, Testimonial, College, CollegeDetailData, ProgramDetailData, MBBSDetailData, StudyIndiaDetailData, Service } from './types';
+
+import { Destination, Office, Blog, Testimonial, College, CollegeDetailData, ProgramDetailData, MBBSDetailData, StudyIndiaDetailData, Service, EntranceExamData } from './types';
 
 export const LOGO_URL = "https://www.iexplaineducation.com/wp-content/uploads/2023/04/Logo-2-scaled-e1684926432756-768x307.jpg";
 export const HERO_IMG_URL = "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=1200";
@@ -322,6 +323,20 @@ export const BLOG_POSTS: Blog[] = [
   }
 ];
 
+export const SCHOLARSHIP_COUNTRIES = [
+  "UK", "Australia", "Canada", "New Zealand", "Poland", "Singapore", "Ireland"
+];
+
+export const SCHOLARSHIP_DATA: Record<string, ProgramDetailData> = {};
+SCHOLARSHIP_COUNTRIES.forEach(c => {
+  SCHOLARSHIP_DATA[c.toLowerCase().replace(/ /g, '-')] = {
+    title: `Scholarships in ${c}`,
+    tagline: "Fund Your Dream Education",
+    heroImage: "https://images.unsplash.com/photo-1621640786029-22ad870a7676?auto=format&fit=crop&q=80&w=1600",
+    content: `<h3>Scholarship Opportunities in ${c}</h3><p>Discover a wide range of scholarships available for international students in ${c}. From government-funded programs to university-specific grants, we help you find the financial aid you deserve.</p><ul><li>Merit-based Scholarships</li><li>Need-based Grants</li><li>Research Fellowships</li></ul><p>Contact our counselors to get a personalized list of scholarships you are eligible for.</p>`
+  };
+});
+
 export const STUDY_ABROAD_DETAILED: Record<string, ProgramDetailData> = {
   "usa": {
     title: "Study in USA",
@@ -349,11 +364,92 @@ export const MBBS_ABROAD_DETAILED: Record<string, MBBSDetailData> = {
   }
 };
 
-export const EXAMS_DETAILED: any = {
+export const EXAMS_DETAILED: Record<string, EntranceExamData> = {
+  "jee-main": {
+    title: "JEE (Joint Entrance Examination)",
+    heroImage: "https://images.unsplash.com/photo-1620912189868-3844f2e519c7?auto=format&fit=crop&q=80&w=1600",
+    intro: "The JEE (Joint Entrance Examination) is an entrance exam for admission into various engineering colleges across the country. In 2024, it will be conducted in four sessions by NTA (National Testing Agency). One of the most challenging entrance exams in the country, the JEE 2024 is your gateway to the prestigious IITs, NITs, and Central Funded Technical Institutes (CFTIs).",
+    examParts: ["JEE MAIN", "JEE ADVANCED"],
+    additionalNote: "Institutes like the Indian Institutes of Science Education and Research (IISERs), Rajiv Gandhi Institute of Petroleum Technology, and the Indian Institute of Science consider the marks obtained in JEE Advanced as one of the criteria for admission. However, these institutes are not a part of central IIT-JEE Advanced counseling.",
+    eligibility: {
+      title: "JEE Exam Eligibility",
+      points: [
+        "Those who have cleared their Class XII exam, or any equivalent qualifying examination in Current Year or Previous Year; OR those who are appearing in their Class XII exam, or any equivalent qualifying examination in the current year, are eligible to appear in JEE (Main).",
+        "Candidates can appear for JEE Advanced for a maximum of two consecutive years.",
+        "Those with a Diploma can now also apply for JEE, but only for admission to IITs. These candidates also need to appear for JEE Advanced."
+      ]
+    },
+    syllabus: {
+      maths: [
+        "Sets, Relations & Functions", "Matrices & Determinants", "Permutations & Combinations",
+        "Complex Numbers & Quadratic Equations", "Binomial Theorem, Mathematical Induction, Limit",
+        "Sequences & Series, Differential Equations", "Integral Calculus, Continuity & Differentiability",
+        "Three Dimensional Geometry", "Co-ordinate Geometry", "Statistics & Probability",
+        "Vector Algebra", "Mathematical Reasoning", "Trigonometry"
+      ],
+      physics: {
+        sectionA: [
+          "Laws of Motion", "Kinematics", "Work, Energy & Power", "Gravitation", "Rotational Motion",
+          "Physics & Measurement", "Properties of Solids & Liquids", "Thermodynamics", "Electrostatics",
+          "Oscillations & Waves", "Kinetic Theory of Gases", "Magnetic Effects of Current & Magnetism",
+          "Electromagnetic Induction & Alternating Currents", "Current Electricity", "Optics",
+          "Electromagnetic Waves", "Dual Nature of Matter & Radiation", "Electronic Devices",
+          "Atoms & Nuclei", "Communication Systems, etc."
+        ],
+        sectionB: [
+          "Vernier callipers-its use to measure the internal and external diameter and depth of a vessel.",
+          "Screw gauge-its use to determine thickness/ diameter of thin sheet/wire.",
+          "Simple Pendulum-dissipation of energy by plotting a graph between the square of amplitude and time.",
+          "Metre Scale – the mass of a given object by principle of moments.",
+          "Young's modulus of elasticity of the material of a metallic wire.",
+          "Surface tension of water by capillary rise and effect of detergents.",
+          "Co-efficient of Viscosity of a given viscous liquid by measuring terminal velocity of a given spherical body.",
+          "Plotting a cooling curve for the relationship between the temperature of a hot body and time.",
+          "Speed of sound in air at room temperature using a resonance tube.",
+          "Specific heat capacity of a given (i) solid and (ii) liquid by method of mixtures."
+        ]
+      },
+      chemistry: {
+        physical: [
+          "Some Basic concepts in Chemistry", "States of Matter", "Chemical Bonding & Molecular Structure",
+          "Atomic Structure", "Solutions, Redox Reactions & Electrochemistry", "Equilibrium, Chemical Thermodynamics",
+          "Chemical Kinetics, Surface Chemistry, etc."
+        ],
+        inorganic: [
+          "General Principles & Process of Isolation of Metals", "Hydrogen, p – Block Elements, s – Block Element",
+          "Co-ordination Compounds, d – and f – Block Elements", "Classification of Elements & Periodicity in Properties",
+          "Environmental Chemistry, etc."
+        ],
+        organic: [
+          "Some Basic Principles of Organic Chemistry", "Organic Compounds Containing Halogens",
+          "Purification & Characterization of Organic Compounds", "Hydrocarbons, Polymers",
+          "Organic Compounds Containing Nitrogen", "Organic Compounds Containing Oxygen",
+          "Bio Molecules", "Principles Related to Practical Chemistry", "Chemistry in Everyday Life, etc."
+        ]
+      }
+    },
+    preparationTips: [
+      "Select right study material for the exam preparation.",
+      "Make a study plan with a dedicated time slot to every subject.",
+      "Study on regular basis.",
+      "Study conceptually and practice more.",
+      "Revise regularly the topic which you study.",
+      "Practice numericals."
+    ]
+  },
   "neet-ug": {
-    title: "NEET UG 2025",
-    overview: "National Eligibility cum Entrance Test for medical aspirants.",
-    eligibility: ["10+2 with PCB", "Age 17+"]
+     title: "NEET UG 2025",
+     heroImage: "https://images.unsplash.com/photo-1576091160550-2187d80a1a44?auto=format&fit=crop&q=80&w=1600",
+     intro: "The National Eligibility cum Entrance Test (Undergraduate) or NEET (UG), formerly the All India Pre-Medical Test (AIPMT), is an all India pre-medical entrance test for students who wish to pursue undergraduate medical (MBBS), dental (BDS) and AYUSH (BAMS, BUMS, BHMS, etc.) courses in government and private institutions in India and also, for those intending to pursue primary medical qualification abroad.",
+     examParts: ["Physics", "Chemistry", "Biology (Botany + Zoology)"],
+     eligibility: {
+         title: "NEET Eligibility Criteria",
+         points: ["Must have passed 10+2 with Physics, Chemistry, Biology/Biotechnology and English.", "Minimum 50% marks for General category.", "Minimum age 17 years."]
+     },
+     syllabus: {
+         general: ["Physics: Mechanics, Optics, Thermodynamics...", "Chemistry: Physical, Organic, Inorganic...", "Biology: Diversity, Cell Structure, Genetics..."]
+     },
+     preparationTips: ["Focus on NCERT books.", "Solve previous year question papers.", "Take mock tests regularly."]
   }
 };
 

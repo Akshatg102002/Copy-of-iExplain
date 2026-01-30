@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { LOGO_URL, MEGA_MENU_DATA, OFFICE_ADDRESSES } from '../constants.tsx';
+import { LOGO_URL, MEGA_MENU_DATA, OFFICE_ADDRESSES, SCHOLARSHIP_COUNTRIES } from '../constants.tsx';
 import * as Flags from 'country-flag-icons/react/3x2';
 
 interface NavbarProps {
@@ -36,7 +36,6 @@ const TopBar: React.FC = () => {
   const [showFindUs, setShowFindUs] = useState(false);
   const [offices, setOffices] = useState(OFFICE_ADDRESSES);
   const [locating, setLocating] = useState(false);
-  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,7 +54,6 @@ const TopBar: React.FC = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setUserLocation({ lat: latitude, lng: longitude });
 
           // Sort offices by distance
           const sorted = [...OFFICE_ADDRESSES].map(office => {
@@ -146,7 +144,9 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, logoUrl }) => 
   const [activeTab, setActiveTab] = useState<keyof typeof MEGA_MENU_DATA>("STUDY ABROAD");
   const [isMegaOpen, setIsMegaOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScholarshipOpen, setIsScholarshipOpen] = useState(false);
   const timerRef = useRef<number | null>(null);
+  const scholarshipTimerRef = useRef<number | null>(null);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -157,13 +157,22 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, logoUrl }) => 
     }
   }, [isMobileMenuOpen]);
 
+  // Mega Menu Handlers
   const handleMouseEnter = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
     setIsMegaOpen(true);
   };
-
   const handleMouseLeave = () => {
     timerRef.current = window.setTimeout(() => setIsMegaOpen(false), 200);
+  };
+
+  // Scholarship Dropdown Handlers
+  const handleScholarshipEnter = () => {
+    if (scholarshipTimerRef.current) clearTimeout(scholarshipTimerRef.current);
+    setIsScholarshipOpen(true);
+  };
+  const handleScholarshipLeave = () => {
+    scholarshipTimerRef.current = window.setTimeout(() => setIsScholarshipOpen(false), 200);
   };
 
   const sidebarIcons: Record<string, string> = {
@@ -183,16 +192,48 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, logoUrl }) => 
           </div>
 
           <div className="hidden lg:flex flex-grow justify-center h-full items-center space-x-8 xl:space-x-10">
-            {['HOME', 'ABOUT', 'PROGRAMS', 'SERVICES', 'BLOGS', 'CONTACT'].map(name => (
-              <div key={name} className="h-20 flex items-center" 
-                onMouseEnter={name === 'PROGRAMS' ? handleMouseEnter : undefined} 
-                onMouseLeave={name === 'PROGRAMS' ? handleMouseLeave : undefined}>
-                <a href={name === 'PROGRAMS' ? undefined : name === 'HOME' ? '#' : `#/${name.toLowerCase()}`} 
-                  className={`text-[11px] font-bold tracking-[0.15em] transition-all py-2 border-b-2 border-transparent hover:border-brand-gold ${name === 'PROGRAMS' && isMegaOpen ? 'text-brand-gold border-brand-gold' : 'text-brand-blue dark:text-white hover:text-brand-gold'}`}>
-                  {name} {name === 'PROGRAMS' && <i className="fa-solid fa-chevron-down ml-1.5 text-[8px]"></i>}
-                </a>
-              </div>
-            ))}
+            {['HOME', 'ABOUT', 'PROGRAMS', 'SCHOLARSHIP', 'SERVICES', 'BLOGS', 'CONTACT'].map(name => {
+              if (name === 'PROGRAMS') {
+                return (
+                  <div key={name} className="h-20 flex items-center relative" 
+                    onMouseEnter={handleMouseEnter} 
+                    onMouseLeave={handleMouseLeave}>
+                    <a href="#" className={`text-[11px] font-bold tracking-[0.15em] transition-all py-2 border-b-2 border-transparent hover:border-brand-gold ${isMegaOpen ? 'text-brand-gold border-brand-gold' : 'text-brand-blue dark:text-white hover:text-brand-gold'}`}>
+                      {name} <i className="fa-solid fa-chevron-down ml-1.5 text-[8px]"></i>
+                    </a>
+                  </div>
+                );
+              }
+              if (name === 'SCHOLARSHIP') {
+                return (
+                  <div key={name} className="h-20 flex items-center relative"
+                    onMouseEnter={handleScholarshipEnter}
+                    onMouseLeave={handleScholarshipLeave}>
+                    <a href="#" className={`text-[11px] font-bold tracking-[0.15em] transition-all py-2 border-b-2 border-transparent hover:border-brand-gold ${isScholarshipOpen ? 'text-brand-gold border-brand-gold' : 'text-brand-blue dark:text-white hover:text-brand-gold'}`}>
+                      {name} <i className="fa-solid fa-chevron-down ml-1.5 text-[8px]"></i>
+                    </a>
+                    
+                    {isScholarshipOpen && (
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-56 bg-white dark:bg-slate-900 shadow-xl rounded-2xl border border-gray-100 dark:border-slate-800 overflow-hidden animate-fade-in flex flex-col z-[300]">
+                         {SCHOLARSHIP_COUNTRIES.map((country) => (
+                           <a key={country} href={`#/scholarship/${country.toLowerCase().replace(/ /g, '-')}`} className="block px-6 py-3 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-brand-light dark:hover:bg-slate-800 hover:text-brand-blue dark:hover:text-white transition-colors border-b border-gray-50 dark:border-slate-800 last:border-0">
+                             {country}
+                           </a>
+                         ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              return (
+                <div key={name} className="h-20 flex items-center">
+                  <a href={name === 'HOME' ? '#' : `#/${name.toLowerCase()}`} 
+                    className="text-[11px] font-bold tracking-[0.15em] transition-all py-2 border-b-2 border-transparent hover:border-brand-gold text-brand-blue dark:text-white hover:text-brand-gold">
+                    {name}
+                  </a>
+                </div>
+              );
+            })}
           </div>
 
           <div className="flex items-center space-x-4 w-auto lg:w-[180px] justify-end flex-shrink-0">
@@ -206,7 +247,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, logoUrl }) => 
           </div>
         </div>
 
-        {/* Desktop Mega Menu */}
+        {/* Desktop Mega Menu for PROGRAMS */}
         {isMegaOpen && (
           <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className="absolute top-full inset-x-0 w-full flex justify-center z-[300]">
             <div className="w-[95%] max-w-5xl bg-white dark:bg-slate-900 shadow-[0_30px_80px_-10px_rgba(0,0,0,0.25)] border border-gray-100 dark:border-slate-800 rounded-[2rem] mt-3 overflow-hidden animate-fade-in flex flex-col">
@@ -259,8 +300,8 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, logoUrl }) => 
                   {item}
                 </a>
               ))}
-              
-              <div className="pt-8 pb-10">
+
+              <div className="pt-8 pb-4">
                  <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Educational Programs</p>
                  <div className="space-y-6">
                    {Object.keys(MEGA_MENU_DATA).map(key => (
@@ -277,6 +318,18 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, logoUrl }) => 
                        </div>
                      </div>
                    ))}
+                 </div>
+              </div>
+
+              {/* Mobile Scholarship */}
+              <div className="pt-4 pb-10">
+                 <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Scholarships</p>
+                 <div className="pl-4 space-y-3">
+                    {SCHOLARSHIP_COUNTRIES.map(c => (
+                        <a key={c} href={`#/scholarship/${c.toLowerCase().replace(/ /g, '-')}`} onClick={() => setIsMobileMenuOpen(false)} className="block text-lg font-bold text-gray-800 dark:text-white">
+                            {c}
+                        </a>
+                    ))}
                  </div>
               </div>
 

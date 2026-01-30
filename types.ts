@@ -155,6 +155,33 @@ export interface StudyIndiaDetailData {
   };
 }
 
+// New Interface for Detailed Entrance Exams
+export interface EntranceExamData {
+  title: string;
+  heroImage: string;
+  intro: string;
+  examParts: string[]; // e.g. ["JEE Main", "JEE Advanced"]
+  additionalNote?: string;
+  eligibility: {
+    title: string;
+    points: string[];
+  };
+  syllabus: {
+    maths?: string[];
+    physics?: {
+      sectionA: string[];
+      sectionB: string[]; // Experiments
+    };
+    chemistry?: {
+      physical: string[];
+      inorganic: string[];
+      organic: string[];
+    };
+    general?: string[]; // Fallback for other exams
+  };
+  preparationTips: string[];
+}
+
 export interface BlogCategory {
   id: string;
   name: string;
@@ -221,7 +248,7 @@ export interface GalleryItem {
   category: 'Visa Success' | 'University Visit' | 'Event';
 }
 
-export type AppView = 'home' | 'about' | 'services' | 'contact' | 'mbbs-abroad' | 'study-abroad' | 'study-india' | 'exams' | 'admin' | 'service-detail' | 'legal' | 'achievements' | 'office-detail' | 'blog-list' | 'blog-detail' | 'college-detail';
+export type AppView = 'home' | 'about' | 'services' | 'contact' | 'mbbs-abroad' | 'study-abroad' | 'study-india' | 'exams' | 'scholarship' | 'admin' | 'service-detail' | 'legal' | 'achievements' | 'office-detail' | 'blog-list' | 'blog-detail' | 'college-detail';
 
 export interface RouteState {
   view: AppView;

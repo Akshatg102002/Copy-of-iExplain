@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar.tsx';
 import Hero from './components/Hero.tsx';
@@ -22,6 +23,7 @@ import CollegeDetailPage from './components/CollegeDetailPage.tsx';
 import ProgramDetailPage from './components/ProgramDetailPage.tsx';
 import StudyIndiaDetailPage from './components/StudyIndiaDetailPage.tsx';
 import MBBSDetailPage from './components/MBBSDetailPage.tsx';
+import EntranceExamDetailPage from './components/EntranceExamDetailPage.tsx';
 import * as Flags from 'country-flag-icons/react/3x2';
 import { 
   STUDENT_SERVICES_DATA,
@@ -33,6 +35,7 @@ import {
   STUDY_ABROAD_DETAILED,
   MBBS_ABROAD_DETAILED,
   EXAMS_DETAILED,
+  SCHOLARSHIP_DATA,
   HERO_IMG_URL,
   PRIVACY_POLICY_CONTENT,
   TERMS_CONTENT
@@ -313,28 +316,10 @@ const OfficeDetailPage = ({ slug }: { slug: string }) => {
   );
 };
 
+// Exam page using new detailed component
 const ExamPage = ({ data }: { data: any }) => {
    if (!data) return <div className="py-20 text-center font-bold text-gray-500">Exam information not available.</div>;
-
-   // Mapping legacy exam data to new ProgramDetailPage format
-   // If data.content is present (like in neet-ug), use it.
-   // Otherwise construct it from legacy fields.
-   const contentHtml = data.content || `
-     ${data.overview ? `<h3>About</h3><p>${data.overview}</p>` : ''}
-     ${data.eligibility && data.eligibility.length > 0 ? `<h3>Eligibility</h3><ul>${data.eligibility.map((e: string) => `<li>${e}</li>`).join('')}</ul>` : ''}
-     ${data.syllabus && data.syllabus.length > 0 ? `<h3>Syllabus</h3><ul>${data.syllabus.map((s: string) => `<li>${s}</li>`).join('')}</ul>` : ''}
-     ${data.prepTips && data.prepTips.length > 0 ? `<h3>Preparation Tips</h3><ul>${data.prepTips.map((t: string) => `<li>${t}</li>`).join('')}</ul>` : ''}
-   `;
-
-   const adaptedData = {
-     title: data.title,
-     tagline: data.tagline,
-     heroImage: data.heroImage || HERO_IMG_URL,
-     content: contentHtml,
-     faqs: data.faqs ? data.faqs.map((f:any) => ({ question: f.q, answer: f.a })) : []
-   };
-   
-   return <ProgramDetailPage data={adaptedData} type="course" />;
+   return <EntranceExamDetailPage data={data} />;
 };
 
 const AboutPage = () => <div className="py-20 text-center"><h1 className="text-4xl font-bold">About Us</h1><AboutSection compact={false} /></div>;
@@ -420,6 +405,7 @@ const App: React.FC = () => {
         else if (parts[0] === 'office') setRoute({ view: 'office-detail', subPath: parts[1] });
         else if (parts[0] === 'study-india') setRoute({ view: 'study-india', subPath: parts[1] });
         else if (parts[0] === 'study-abroad') setRoute({ view: 'study-abroad', subPath: parts[1] });
+        else if (parts[0] === 'scholarship') setRoute({ view: 'scholarship', subPath: parts[1] });
         else if (parts[0] === 'mbbs-abroad') setRoute({ view: 'mbbs-abroad', subPath: parts[1] });
         else if (parts[0] === 'exams') setRoute({ view: 'exams', subPath: parts[1] });
         else if (parts[0] === 'college') setRoute({ view: 'college-detail', subPath: parts[1] });
@@ -454,7 +440,8 @@ const App: React.FC = () => {
       case 'study-india': return <StudyIndiaDetailPage data={INDIA_COURSES_DETAILED[route.subPath || 'mbbs']} />;
       case 'study-abroad': return <ProgramDetailPage data={STUDY_ABROAD_DETAILED[route.subPath || 'usa']} type="country" />;
       case 'mbbs-abroad': return <MBBSDetailPage data={MBBS_ABROAD_DETAILED[route.subPath || 'russia']} />;
-      case 'exams': return <ExamPage data={EXAMS_DETAILED[route.subPath || 'neet-ug']} />;
+      case 'scholarship': return <ProgramDetailPage data={SCHOLARSHIP_DATA[route.subPath || 'uk']} type="course" />;
+      case 'exams': return <ExamPage data={EXAMS_DETAILED[route.subPath || 'jee-main']} />;
       case 'office-detail': return <OfficeDetailPage slug={route.subPath || ''} />;
       case 'college-detail': return <CollegeDetailWrapper slug={route.subPath || ''} />;
       case 'service-detail': return <ServiceDetailPage id={route.subPath} />;
