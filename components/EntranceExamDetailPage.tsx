@@ -30,7 +30,7 @@ const EntranceExamDetailPage: React.FC<EntranceExamDetailPageProps> = ({ data })
         </div>
         <div className="relative z-10 text-center max-w-5xl mx-auto px-4 mt-20">
           <span className="inline-block px-4 py-2 bg-brand-gold/20 backdrop-blur-md border border-brand-gold/40 text-brand-gold rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6">
-            Entrance Examination 2024-25
+            Entrance Examination
           </span>
           <h1 className="text-4xl lg:text-7xl font-black text-white mb-6 drop-shadow-xl">{data.title}</h1>
         </div>

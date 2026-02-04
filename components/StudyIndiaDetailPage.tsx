@@ -140,7 +140,7 @@ const StudyIndiaDetailPage: React.FC<StudyIndiaDetailPageProps> = ({ data }) => 
                  </div>
                  <h3 className="text-xl font-black text-brand-blue dark:text-white mb-4">{data.eligibility.title}</h3>
                  <ul className="space-y-3">
-                    {data.eligibility.points.slice(0, 4).map((point, idx) => (
+                    {data.eligibility.points.slice(0, 10).map((point, idx) => (
                       <li key={idx} className="flex items-start">
                          <i className="fa-solid fa-check text-green-500 mt-1 mr-2 text-xs"></i>
                          <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{point}</span>
@@ -158,7 +158,7 @@ const StudyIndiaDetailPage: React.FC<StudyIndiaDetailPageProps> = ({ data }) => 
                  <div className="flex flex-wrap gap-2">
                     {data.documents.points.map((point, idx) => (
                       <span key={idx} className="px-3 py-1.5 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-600 rounded-lg text-xs font-bold text-gray-600 dark:text-gray-300">
-                         {point.split(' ').slice(0, 3).join(' ')}...
+                         {point.split(' ').slice(0, 10).join(' ')}...
                       </span>
                     ))}
                  </div>

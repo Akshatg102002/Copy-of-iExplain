@@ -47,7 +47,7 @@ const Hero: React.FC<HeroProps> = ({ onStartAI }) => {
           <div className="lg:w-1/2 relative">
             <div className="relative z-10 aspect-hero overflow-hidden rounded-[3rem] shadow-[0_48px_100px_rgba(2,56,90,0.15)] border-8 border-white dark:border-slate-800 bg-gray-50">
               <img 
-                src={HERO_IMG_URL} 
+                src="https://images.unsplash.com/photo-1709054172839-17880c040f22?q=80&w=873"
                 alt="iExplain Education Success" 
                 className="w-full h-full object-cover transition-all duration-1000 hover:scale-110"
               />

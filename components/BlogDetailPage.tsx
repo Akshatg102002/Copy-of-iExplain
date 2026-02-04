@@ -1,185 +1,228 @@
 
 import React, { useState, useEffect } from 'react';
-import { BLOG_POSTS } from '../constants.tsx';
-import { db, collection, query, getDocs } from '../firebase.ts';
+import { BLOG_POSTS, HERO_IMG_URL } from '../constants.tsx';
+import { db, collection, getDocs, query } from '../firebase.ts';
 import ContactForm from './ContactForm.tsx';
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from 'react-icons/fa';
+
+// Helper to generate slugs (duplicated to avoid circular dependency with App.tsx)
+const createSlug = (text: string) => text ? text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') : '';
 
 interface BlogDetailPageProps {
   slug: string;
 }
 
-// Helper to recreate slug logic locally if needed, or import
-const createSlug = (text: string) => text ? text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') : '';
-
 const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug }) => {
   const [post, setPost] = useState<any>(null);
+  const [relatedPosts, setRelatedPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPost = async () => {
       setLoading(true);
-      
-      // 1. Try finding in local constants first (fastest)
-      const localPost = BLOG_POSTS.find(p => createSlug(p.title) === slug);
-      if (localPost) {
-        setPost(localPost);
+
+      // 1. Try finding in Constants
+      const constantPost = BLOG_POSTS.find(p => createSlug(p.title) === slug);
+      if (constantPost) {
+        setPost(constantPost);
+        // Set related posts from constants excluding current
+        setRelatedPosts(BLOG_POSTS.filter(p => createSlug(p.title) !== slug).slice(0, 4));
         setLoading(false);
         return;
       }
 
-      // 2. Try fetching from Firebase
+      // 2. Try finding in Firebase
       try {
         const q = query(collection(db, 'blogs'));
         const querySnapshot = await getDocs(q);
-        const firebasePost = querySnapshot.docs
-          .map(doc => ({ id: doc.id, ...doc.data() as any }))
-          .find(p => createSlug(p.title) === slug);
+        const fetchedBlogs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as any }));
+        const firebasePost = fetchedBlogs.find(p => createSlug(p.title) === slug);
 
         if (firebasePost) {
           setPost(firebasePost);
+          // Set related posts from mixed source (prefer constants for speed in this demo, or filter fetched)
+          // Mixing constants and fetched for related to ensure content
+          const allPosts = [...fetchedBlogs, ...BLOG_POSTS];
+          // Filter out current and duplicates by title
+          const others = allPosts.filter(p => createSlug(p.title) !== slug);
+          const uniqueOthers = others.filter((v, i, a) => a.findIndex(t => (t.title === v.title)) === i);
+          setRelatedPosts(uniqueOthers.slice(0, 4));
+        } else {
+          setPost(null);
         }
       } catch (error) {
-        console.error("Error fetching blog post:", error);
+        console.error("Error fetching blog:", error);
+        setPost(null);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPost();
+    if (slug) {
+      fetchPost();
+    } else {
+      setLoading(false);
+    }
   }, [slug]);
 
-  if (loading) return (
-    <div className="min-h-[60vh] flex items-center justify-center bg-white dark:bg-slate-900">
-      <div className="w-12 h-12 border-4 border-brand-gold border-t-transparent rounded-full animate-spin"></div>
-    </div>
-  );
-
-  if (!post) return (
-    <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-8 bg-white dark:bg-slate-900">
-      <div className="w-20 h-20 bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6 text-gray-400">
-        <i className="fa-solid fa-file-circle-xmark text-3xl"></i>
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center bg-white dark:bg-slate-900">
+        <div className="w-16 h-16 border-4 border-brand-gold border-t-transparent rounded-full animate-spin"></div>
       </div>
-      <h2 className="text-2xl font-black text-brand-blue dark:text-white mb-2">Article Not Found</h2>
-      <p className="text-gray-500 mb-6">The article you are looking for does not exist or has been moved.</p>
-      <a href="#/blog-list" className="px-6 py-3 bg-brand-blue text-white rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-brand-gold transition-all">Back to Blogs</a>
-    </div>
-  );
+    );
+  }
 
-  // Social Share URLs
-  const currentUrl = window.location.href;
-  const shareText = `Check out this article: ${post.title}`;
-  
+  if (!post) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center bg-white dark:bg-slate-900 text-center px-4 animate-fade-in">
+        <div className="w-24 h-24 bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6 text-gray-400">
+          <i className="fa-solid fa-file-circle-xmark text-4xl"></i>
+        </div>
+        <h2 className="text-3xl font-black text-brand-blue dark:text-white mb-2">Article Not Found</h2>
+        <p className="text-gray-500 dark:text-gray-400 font-medium mb-8 max-w-md">
+          The article you are looking for does not exist or has been moved.
+        </p>
+        <a
+          href="#/blog-list"
+          className="px-8 py-3 bg-brand-blue text-white rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-brand-gold transition-all shadow-lg"
+        >
+          Back to Blogs
+        </a>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white dark:bg-slate-900 pb-20 animate-fade-in font-sans">
-      
-      {/* Progress Bar (Optional visual flair) */}
-      <div className="fixed top-0 left-0 h-1 bg-brand-gold z-[100] w-full origin-left scale-x-0 animate-[progress_1s_ease-out_forwards]"></div>
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
-        
-        {/* Breadcrumb */}
-        <div className="flex items-center text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-8">
-           <a href="#/" className="hover:text-brand-blue dark:hover:text-white transition-colors">Home</a>
-           <span className="mx-2">/</span>
-           <a href="#/blog-list" className="hover:text-brand-blue dark:hover:text-white transition-colors">Blogs</a>
-           <span className="mx-2">/</span>
-           <span className="text-brand-gold">{post.category || 'Article'}</span>
-        </div>
-
-        {/* Featured Image */}
-        <div className="aspect-video w-full rounded-[2.5rem] overflow-hidden shadow-2xl mb-12 relative group">
-           <img 
-             src={post.img} 
-             alt={post.title} 
-             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-           />
-           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
-        </div>
-
-        {/* Header Content (Below Image) */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-           <div className="inline-block px-4 py-1.5 rounded-full bg-brand-gold/10 text-brand-gold text-[10px] font-black uppercase tracking-[0.2em] mb-6">
-              {post.category || 'Insights'}
-           </div>
-           <h1 className="text-3xl md:text-5xl font-black text-brand-blue dark:text-white mb-8 leading-tight">
-             {post.title}
-           </h1>
-           
-           <div className="flex items-center justify-center gap-8 text-sm font-medium text-gray-500 dark:text-gray-400 border-y border-gray-100 dark:border-slate-800 py-6">
-              <div className="flex items-center">
-                 <div className="w-8 h-8 bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center mr-3 text-brand-blue dark:text-white">
-                    <i className="fa-solid fa-user text-xs"></i>
-                 </div>
-                 <span>{post.author || 'Admin'}</span>
-              </div>
-              <div className="flex items-center">
-                 <i className="fa-regular fa-calendar mr-2"></i>
-                 <span>{post.date}</span>
-              </div>
-              <div className="flex items-center">
-                 <i className="fa-regular fa-clock mr-2"></i>
-                 <span>{post.readTime || '5 min read'}</span>
-              </div>
-           </div>
-        </div>
-
-        {/* Article Body */}
-        <div className="prose prose-lg dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 font-medium leading-loose
-             prose-headings:text-brand-blue dark:prose-headings:text-white prose-headings:font-black
-             prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-6
-             prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-4
-             prose-p:mb-6 prose-a:text-brand-gold hover:prose-a:text-brand-blue
-             prose-blockquote:border-l-4 prose-blockquote:border-brand-gold prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-slate-800/50 prose-blockquote:p-6 prose-blockquote:rounded-r-xl prose-blockquote:italic
-             prose-img:rounded-3xl prose-img:shadow-xl prose-img:my-10">
-           <div dangerouslySetInnerHTML={{ __html: post.content }} />
-        </div>
-
-        {/* Social Share */}
-        <div className="mt-16 pt-10 border-t border-gray-100 dark:border-slate-800">
-           <h3 className="text-center text-sm font-black text-brand-blue dark:text-white uppercase tracking-widest mb-6">Share this article</h3>
-           <div className="flex justify-center gap-4">
-              <a href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-blue-500/20">
-                 <i className="fa-brands fa-facebook-f"></i>
-              </a>
-              <a href={`https://twitter.com/intent/tweet?text=${shareText}&url=${currentUrl}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-[#1DA1F2] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-blue-400/20">
-                 <i className="fa-brands fa-twitter"></i>
-              </a>
-              <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-[#0A66C2] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-blue-600/20">
-                 <i className="fa-brands fa-linkedin-in"></i>
-              </a>
-              <a href={`https://wa.me/?text=${shareText} ${currentUrl}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-[#25D366] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-green-500/20">
-                 <i className="fa-brands fa-whatsapp"></i>
-              </a>
-           </div>
-        </div>
-
-        {/* Author Bio (Optional) */}
-        <div className="mt-16 bg-gray-50 dark:bg-slate-800/50 p-8 rounded-[2rem] flex items-center gap-6">
-           <div className="w-20 h-20 bg-brand-blue rounded-full flex items-center justify-center text-white text-2xl font-black shrink-0">
-              {post.author ? post.author.charAt(0) : 'A'}
-           </div>
-           <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-brand-gold mb-1">About The Author</p>
-              <h4 className="text-lg font-bold text-brand-blue dark:text-white mb-2">{post.author || 'iExplain Editor'}</h4>
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                 Expert counselor and education analyst with over 10 years of experience in guiding students for international admissions.
-              </p>
-           </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className="mt-20 bg-brand-blue rounded-[3rem] p-10 md:p-16 text-center text-white relative overflow-hidden shadow-2xl">
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
-            <div className="absolute -top-40 -left-40 w-96 h-96 bg-brand-gold/30 rounded-full blur-3xl"></div>
-            
-            <div className="relative z-10 max-w-2xl mx-auto">
-               <h2 className="text-3xl font-black mb-6">Inspired by this story?</h2>
-               <p className="text-lg text-white/80 font-medium mb-10">Start your own journey today. Get free counseling from our experts and secure your seat in top universities.</p>
-               
-               <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10 text-left">
-                   <ContactForm theme="dark" />
-               </div>
+    <div className="bg-white dark:bg-slate-900 pb-20 animate-fade-in">
+      {/* Hero Header */}
+      <div className="relative h-[50vh] min-h-[400px] w-full overflow-hidden">
+        <img
+          src={post.img || HERO_IMG_URL}
+          alt={post.title}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+        <div className="absolute inset-0 flex items-end">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-16 relative z-10">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-brand-gold text-white text-[10px] font-black uppercase tracking-widest mb-6">
+              {post.category || 'Education'}
+            </span>
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight drop-shadow-sm">
+              {post.title}
+            </h1>
+            <div className="flex flex-wrap items-center text-white/80 text-xs font-bold uppercase tracking-widest gap-6">
+              {post.author && (
+                <span className="flex items-center gap-2">
+                  <i className="fa-solid fa-user-pen text-brand-gold"></i> {post.author}
+                </span>
+              )}
+              {post.date && (
+                <span className="flex items-center gap-2">
+                  <i className="fa-solid fa-calendar-days text-brand-gold"></i> {post.date}
+                </span>
+              )}
+              {post.readTime && (
+                <span className="flex items-center gap-2">
+                  <i className="fa-solid fa-clock text-brand-gold"></i> {post.readTime}
+                </span>
+              )}
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Main Content */}
+          <div className="lg:col-span-8">
+            <div className="bg-white dark:bg-slate-800 p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-gray-100 dark:border-slate-700">
+              <div
+                className="prose prose-lg dark:prose-invert max-w-none 
+                prose-headings:text-brand-blue dark:prose-headings:text-white prose-headings:font-black
+                prose-p:text-gray-600 dark:prose-p:text-gray-300 prose-p:font-medium prose-p:leading-loose
+                prose-a:text-brand-gold hover:prose-a:text-brand-blue
+                prose-li:marker:text-brand-gold
+                prose-img:rounded-2xl prose-img:shadow-lg"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-4 space-y-8">
+            {/* Share Widget */}
+            <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm border border-gray-100 dark:border-slate-700">
+              <h4 className="font-black text-brand-blue dark:text-white text-sm uppercase tracking-widest mb-6">Share this article</h4>
+              <div className="flex gap-4">
+                {[FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp].map((Icon, i) => (
+                  <button
+                    key={i}
+                    className="w-10 h-10 rounded-full bg-gray-50 dark:bg-slate-700
+                 flex items-center justify-center text-gray-500
+                 hover:bg-brand-blue hover:text-white transition-all"
+                  >
+                    <Icon />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Related Posts Widget (Replaced Contact Form) */}
+            <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm border border-gray-100 dark:border-slate-700 sticky top-24">
+              <h4 className="font-black text-brand-blue dark:text-white text-sm uppercase tracking-widest mb-6 relative">
+                Related Articles
+                <span className="absolute -bottom-2 left-0 w-10 h-0.5 bg-brand-gold"></span>
+              </h4>
+              <div className="space-y-6">
+                {relatedPosts.map((rPost, idx) => (
+                  <a
+                    key={idx}
+                    href={`#/blog/${createSlug(rPost.category || 'General')}/${createSlug(rPost.title)}`}
+                    className="group flex items-start gap-4 hover:bg-gray-50 dark:hover:bg-slate-700/50 p-2 rounded-xl transition-colors -mx-2"
+                  >
+                    <div className="w-20 h-20 shrink-0 rounded-xl overflow-hidden bg-gray-200">
+                      <img src={rPost.img} alt={rPost.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    </div>
+                    <div>
+                      <span className="text-[9px] font-black text-brand-gold uppercase tracking-wider mb-1 block">{rPost.category || 'Blog'}</span>
+                      <h5 className="text-sm font-bold text-brand-blue dark:text-white leading-tight line-clamp-2 group-hover:text-brand-gold transition-colors">
+                        {rPost.title}
+                      </h5>
+                      <span className="text-[10px] text-gray-400 font-bold mt-2 block">{rPost.date}</span>
+                    </div>
+                  </a>
+                ))}
+                {relatedPosts.length === 0 && <p className="text-gray-400 text-xs">No related articles found.</p>}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Full Width Contact Section (Moved below content) */}
+        <div className="mt-16 bg-gradient-to-br from-brand-blue to-blue-900 rounded-[2.5rem] p-10 md:p-16 relative overflow-hidden shadow-2xl">
+          {/* Decorative Background */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-[100px] -mr-20 -mt-20 pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-gold/10 rounded-full blur-[80px] -ml-12 -mb-12 pointer-events-none"></div>
+
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="text-white">
+              <div className="inline-block px-4 py-1.5 rounded-full bg-brand-gold/20 border border-brand-gold/30 text-brand-gold text-[10px] font-black uppercase tracking-[0.2em] mb-6">
+                Admissions Open 2025
+              </div>
+              <h3 className="text-3xl md:text-5xl font-black mb-6 leading-tight">Need Expert <span className="text-brand-gold">Guidance?</span></h3>
+              <p className="text-blue-100 text-lg font-medium mb-10 leading-loose max-w-lg">
+                Don't let confusion hold you back. Our expert counselors are ready to help you choose the right university and guide you through the entire admission process, visa, and travel.
+              </p>
+
+            </div>
+
+            <div className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-2xl border-4 border-white/10">
+              <h4 className="text-2xl font-black text-brand-blue mb-2">Get in Touch</h4>
+              <p className="text-gray-500 text-sm font-medium mb-6">Fill the form below and we will get back to you shortly.</p>
+              <ContactForm />
+            </div>
+          </div>
         </div>
 
       </div>

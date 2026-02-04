@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { db, collection, addDoc, serverTimestamp } from '../firebase.ts';
 
 const CITIES = [
-  "New Delhi", "Mumbai", "Bangalore", "Chennai", "Hyderabad", "Kolkata", "Pune", 
-  "Ahmedabad", "Jaipur", "Lucknow", "Patna", "Dehradun", "Kota", "Chandigarh", 
+  "New Delhi", "Mumbai", "Bangalore", "Chennai", "Hyderabad", "Kolkata", "Pune",
+  "Ahmedabad", "Jaipur", "Lucknow", "Patna", "Dehradun", "Kota", "Chandigarh",
   "Indore", "Bhopal", "Nagpur", "Other"
 ];
 
@@ -51,7 +51,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ theme = 'light' }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       await addDoc(collection(db, 'leads'), {
         ...formData,
@@ -62,7 +62,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ theme = 'light' }) => {
 
       // Local fallback sync
       const existingLeads = JSON.parse(localStorage.getItem('iexplain_leads') || '[]');
-      localStorage.setItem('iexplain_leads', JSON.stringify([{...formData, timestamp: new Date().toISOString()}, ...existingLeads]));
+      localStorage.setItem('iexplain_leads', JSON.stringify([{ ...formData, timestamp: new Date().toISOString() }, ...existingLeads]));
 
       setSubmitted(true);
       setTimeout(() => {
@@ -82,7 +82,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ theme = 'light' }) => {
   const subTextColor = theme === 'dark' ? 'text-white/70' : 'text-gray-500 font-medium';
   // If theme is dark (on blue bg), we want white inputs. If light, we stick to standard.
   const inputBg = theme === 'dark' ? 'bg-white text-gray-900 border-transparent focus:ring-brand-gold' : 'bg-white dark:bg-slate-900 dark:text-white border-gray-200 dark:border-slate-700 focus:ring-brand-blue';
-  
+
   return (
     <div className="relative">
       {submitted ? (
@@ -98,96 +98,101 @@ const ContactForm: React.FC<ContactFormProps> = ({ theme = 'light' }) => {
           <div>
             <h3 className={`text-3xl font-black mb-2 ${textColor}`}>Book Free Consultation</h3>
             <p className={`${subTextColor} text-base mb-6`}>Select your preference and get expert guidance.</p>
-            
+
             {/* Tabs */}
             <div className={`${theme === 'dark' ? 'bg-white/10' : 'bg-gray-100 dark:bg-slate-700'} p-1 rounded-xl w-fit mb-6 overflow-x-auto max-w-full`}>
-               {TABS.map(tab => (
-                 <button
-                   key={tab}
-                   type="button"
-                   onClick={() => setActiveTab(tab)}
-                   className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
-                     activeTab === tab 
-                     ? 'bg-white text-brand-blue shadow-sm' 
-                     : `${theme === 'dark' ? 'text-white/70 hover:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'}`
-                   }`}
-                 >
-                   {tab}
-                 </button>
-               ))}
+              {TABS.map(tab => (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${activeTab === tab
+                    ? 'bg-white text-brand-blue shadow-sm'
+                    : `${theme === 'dark' ? 'text-white/70 hover:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'}`
+                    }`}
+                >
+                  {tab}
+                </button>
+              ))}
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="md:col-span-2">
-              <input 
-                type="text" 
-                required 
+              <input
+                type="text"
+                required
                 disabled={loading}
                 value={formData.name}
-                onChange={(e) => setFormData({...formData, name: e.target.value})}
-                className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm ${inputBg}`} 
-                placeholder="Full Name" 
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm ${inputBg}`}
+                placeholder="Full Name"
               />
             </div>
-            
-            <input 
-              type="email" 
-              required 
+
+            <input
+              type="email"
+              required
               disabled={loading}
               value={formData.email}
-              onChange={(e) => setFormData({...formData, email: e.target.value})}
-              className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm ${inputBg}`} 
-              placeholder="Email Address" 
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm ${inputBg}`}
+              placeholder="Email Address"
             />
-            
-            <input 
-              type="tel" 
-              required 
+
+            <input
+              type="tel"
+              required
               disabled={loading}
               value={formData.phone}
-              onChange={(e) => setFormData({...formData, phone: e.target.value})}
-              className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm ${inputBg}`} 
-              placeholder="Phone Number" 
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm ${inputBg}`}
+              placeholder="Phone Number"
             />
 
             {/* City - Only for Study In India */}
             {activeTab === 'Study In India' && (
-              <select 
-                  value={formData.city}
-                  onChange={e => setFormData({...formData, city: e.target.value})}
-                  required
-                  className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm cursor-pointer ${inputBg}`}
+              <select
+                value={formData.city}
+                onChange={e => setFormData({ ...formData, city: e.target.value })}
+                required
+                className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm cursor-pointer ${inputBg}`}
               >
-                  <option value="" disabled className="text-gray-500 bg-white">Select City</option>
-                  {CITIES.map(c => <option key={c} value={c} className="text-gray-900 bg-white">{c}</option>)}
+                <option value="" disabled className="text-gray-500 bg-dark">Select City</option>
+                {CITIES.map(c => <option key={c} value={c} className="text-gray-900 bg-white">{c}</option>)}
               </select>
             )}
 
-            <select 
-                value={formData.course}
-                onChange={e => setFormData({...formData, course: e.target.value})}
-                required
-                className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm cursor-pointer ${inputBg}`}
+            <select
+              value={formData.course}
+              onChange={e => setFormData({ ...formData, course: e.target.value })}
+              required
+              className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm cursor-pointer text-black ${inputBg}`}
             >
-                <option value="" disabled className="text-gray-500 bg-white">Select Course</option>
-                {COURSES[activeTab].map(c => <option key={c} value={c} className="text-gray-900 bg-white">{c}</option>)}
+              <option value="" disabled className="text-black bg-white">Select Course</option>
+              {COURSES[activeTab].map(c => (
+                <option key={c} value={c} className="text-black bg-white">{c}</option>
+              ))}
             </select>
 
+
             <div className="md:col-span-2">
-              <select 
+              <select
                 value={formData.targetCountry}
                 disabled={loading || activeTab === 'Study In India'}
-                onChange={(e) => setFormData({...formData, targetCountry: e.target.value})}
-                className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm disabled:opacity-70 cursor-pointer ${inputBg}`}
+                onChange={(e) => setFormData({ ...formData, targetCountry: e.target.value })}
+                className={`w-full px-6 py-4 rounded-xl border outline-none transition-all font-medium text-sm disabled:opacity-70 cursor-pointer text-black ${inputBg}`}
               >
-                {COUNTRIES[activeTab].map(c => <option key={c} value={c} className="text-gray-900 bg-white">{c}</option>)}
+                {COUNTRIES[activeTab].map(c => (
+                  <option key={c} value={c} className="text-black bg-white">{c}</option>
+                ))}
               </select>
+
             </div>
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={loading}
             className="w-full py-5 bg-brand-gold text-white rounded-xl font-bold text-sm uppercase tracking-widest hover:bg-opacity-90 transition-all shadow-xl shadow-brand-gold/20 flex items-center justify-center disabled:bg-gray-400"
           >

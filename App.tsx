@@ -9,6 +9,7 @@ import AICounselor from './components/AICounselor.tsx';
 import StatsSection from './components/StatsSection.tsx';
 import Testimonials from './components/Testimonials.tsx';
 import BlogSection from './components/BlogSection.tsx';
+import BlogDetailPage from './components/BlogDetailPage.tsx';
 import ContactForm from './components/ContactForm.tsx';
 import PopularColleges from './components/PopularColleges.tsx';
 import KnowYourDestination from './components/KnowYourDestination.tsx';
@@ -23,8 +24,6 @@ import CollegeDetailPage from './components/CollegeDetailPage.tsx';
 import ProgramDetailPage from './components/ProgramDetailPage.tsx';
 import StudyIndiaDetailPage from './components/StudyIndiaDetailPage.tsx';
 import MBBSDetailPage from './components/MBBSDetailPage.tsx';
-import EntranceExamDetailPage from './components/EntranceExamDetailPage.tsx';
-import BlogDetailPage from './components/BlogDetailPage.tsx'; // New Import
 import * as Flags from 'country-flag-icons/react/3x2';
 import { 
   STUDENT_SERVICES_DATA,
@@ -36,7 +35,6 @@ import {
   STUDY_ABROAD_DETAILED,
   MBBS_ABROAD_DETAILED,
   EXAMS_DETAILED,
-  SCHOLARSHIP_DATA,
   HERO_IMG_URL,
   PRIVACY_POLICY_CONTENT,
   TERMS_CONTENT
@@ -319,13 +317,30 @@ const OfficeDetailPage = ({ slug }: { slug: string }) => {
 
 const ExamPage = ({ data }: { data: any }) => {
    if (!data) return <div className="py-20 text-center font-bold text-gray-500">Exam information not available.</div>;
-   return <EntranceExamDetailPage data={data} />;
+
+   // Mapping legacy exam data to new ProgramDetailPage format
+   // If data.content is present (like in neet-ug), use it.
+   // Otherwise construct it from legacy fields.
+   const contentHtml = data.content || `
+     ${data.overview ? `<h3>About</h3><p>${data.overview}</p>` : ''}
+     ${data.eligibility && data.eligibility.length > 0 ? `<h3>Eligibility</h3><ul>${data.eligibility.map((e: string) => `<li>${e}</li>`).join('')}</ul>` : ''}
+     ${data.syllabus && data.syllabus.length > 0 ? `<h3>Syllabus</h3><ul>${data.syllabus.map((s: string) => `<li>${s}</li>`).join('')}</ul>` : ''}
+     ${data.prepTips && data.prepTips.length > 0 ? `<h3>Preparation Tips</h3><ul>${data.prepTips.map((t: string) => `<li>${t}</li>`).join('')}</ul>` : ''}
+   `;
+
+   const adaptedData = {
+     title: data.title,
+     tagline: data.tagline,
+     heroImage: data.heroImage || HERO_IMG_URL,
+     content: contentHtml,
+     faqs: data.faqs ? data.faqs.map((f:any) => ({ question: f.q, answer: f.a })) : []
+   };
+   
+   return <ProgramDetailPage data={adaptedData} type="course" />;
 };
 
-const AboutPage = () => <div className="py-20 text-center"><h1 className="text-4xl font-bold">About Us</h1><AboutSection compact={false} /></div>;
+const AboutPage = () => <div className="py-20 text-center"><h1 className="text-4xl font-bold">About Us</h1><AboutSection /></div>;
 const BlogListPage = () => <BlogSection />;
-// Updated BlogDetailPage wrapper
-const BlogDetailWrapper = ({ slug }: { slug: string }) => <BlogDetailPage slug={slug} />;
 const ContactPage = () => <div className="py-20 text-center"><h1 className="text-4xl font-bold">Contact</h1><ContactMapSection /></div>;
 
 // --- DYNAMIC COLLEGE PAGE WRAPPER ---
@@ -406,7 +421,6 @@ const App: React.FC = () => {
         else if (parts[0] === 'office') setRoute({ view: 'office-detail', subPath: parts[1] });
         else if (parts[0] === 'study-india') setRoute({ view: 'study-india', subPath: parts[1] });
         else if (parts[0] === 'study-abroad') setRoute({ view: 'study-abroad', subPath: parts[1] });
-        else if (parts[0] === 'scholarship') setRoute({ view: 'scholarship', subPath: parts[1] });
         else if (parts[0] === 'mbbs-abroad') setRoute({ view: 'mbbs-abroad', subPath: parts[1] });
         else if (parts[0] === 'exams') setRoute({ view: 'exams', subPath: parts[1] });
         else if (parts[0] === 'college') setRoute({ view: 'college-detail', subPath: parts[1] });
@@ -436,13 +450,12 @@ const App: React.FC = () => {
       case 'about': return <AboutPage />;
       case 'services': return <ServicesPage />;
       case 'blog-list': return <BlogListPage />;
-      case 'blog-detail' as any: return <BlogDetailWrapper slug={route.subPath || ''} />;
+      case 'blog-detail' as any: return <BlogDetailPage slug={route.subPath || ''} />;
       case 'contact': return <ContactPage />;
       case 'study-india': return <StudyIndiaDetailPage data={INDIA_COURSES_DETAILED[route.subPath || 'mbbs']} />;
       case 'study-abroad': return <ProgramDetailPage data={STUDY_ABROAD_DETAILED[route.subPath || 'usa']} type="country" />;
       case 'mbbs-abroad': return <MBBSDetailPage data={MBBS_ABROAD_DETAILED[route.subPath || 'russia']} />;
-      case 'scholarship': return <ProgramDetailPage data={SCHOLARSHIP_DATA[route.subPath || 'uk']} type="course" />;
-      case 'exams': return <ExamPage data={EXAMS_DETAILED[route.subPath || 'jee-main']} />;
+      case 'exams': return <ExamPage data={EXAMS_DETAILED[route.subPath || 'neet-ug']} />;
       case 'office-detail': return <OfficeDetailPage slug={route.subPath || ''} />;
       case 'college-detail': return <CollegeDetailWrapper slug={route.subPath || ''} />;
       case 'service-detail': return <ServiceDetailPage id={route.subPath} />;
@@ -455,7 +468,7 @@ const App: React.FC = () => {
         <>
           <Hero onStartAI={() => setIsAICounselorOpen(true)} />
           <StatsSection />
-          <AboutSection compact={true} />
+          <AboutSection />
           <IndiaSection />
           <PopularColleges />
           <Roadmap />
